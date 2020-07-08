@@ -1,0 +1,326 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 11.2
+-- Dumped by pg_dump version 11.2
+
+-- Started on 2020-04-06 11:02:08
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 196 (class 1259 OID 1976374)
+-- Name: aluno; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.aluno (
+    idaluno integer NOT NULL,
+    nome character varying(45),
+    endereco character varying(45),
+    fone character varying,
+    email character varying(50),
+    matricula character varying(15),
+    curso character varying(50)
+);
+
+
+ALTER TABLE public.aluno OWNER TO postgres;
+
+--
+-- TOC entry 197 (class 1259 OID 1976380)
+-- Name: aluno_disciplina; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.aluno_disciplina (
+    idaluno integer NOT NULL,
+    iddisciplina integer NOT NULL,
+    semestre integer,
+    ano integer,
+    nota1 numeric,
+    nota2 numeric,
+    faltas integer
+);
+
+
+ALTER TABLE public.aluno_disciplina OWNER TO postgres;
+
+--
+-- TOC entry 198 (class 1259 OID 1976386)
+-- Name: aluno_idAluno_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."aluno_idAluno_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."aluno_idAluno_seq" OWNER TO postgres;
+
+--
+-- TOC entry 2213 (class 0 OID 0)
+-- Dependencies: 198
+-- Name: aluno_idAluno_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."aluno_idAluno_seq" OWNED BY public.aluno.idaluno;
+
+
+--
+-- TOC entry 199 (class 1259 OID 1976388)
+-- Name: disciplina; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.disciplina (
+    iddisciplina integer NOT NULL,
+    nome character varying(50),
+    codigo character varying(10),
+    cargahoraria integer
+);
+
+
+ALTER TABLE public.disciplina OWNER TO postgres;
+
+--
+-- TOC entry 200 (class 1259 OID 1976391)
+-- Name: disciplina_idDisciplina_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."disciplina_idDisciplina_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."disciplina_idDisciplina_seq" OWNER TO postgres;
+
+--
+-- TOC entry 2214 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: disciplina_idDisciplina_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."disciplina_idDisciplina_seq" OWNED BY public.disciplina.iddisciplina;
+
+
+--
+-- TOC entry 201 (class 1259 OID 1976393)
+-- Name: professor; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.professor (
+    idprofessor integer NOT NULL,
+    nome character varying(45),
+    endereco character varying(45),
+    fone character varying,
+    email character varying(50),
+    formacao character varying(50),
+    titulacao character varying(50),
+    salario double precision
+);
+
+
+ALTER TABLE public.professor OWNER TO postgres;
+
+--
+-- TOC entry 202 (class 1259 OID 1976399)
+-- Name: professor_disciplina; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.professor_disciplina (
+    idprofessor integer NOT NULL,
+    iddisciplina integer NOT NULL,
+    semestre integer,
+    ano integer,
+    dias character varying
+);
+
+
+ALTER TABLE public.professor_disciplina OWNER TO postgres;
+
+--
+-- TOC entry 203 (class 1259 OID 1976405)
+-- Name: professor_idProfessor_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."professor_idProfessor_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."professor_idProfessor_seq" OWNER TO postgres;
+
+--
+-- TOC entry 2215 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: professor_idProfessor_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."professor_idProfessor_seq" OWNED BY public.professor.idprofessor;
+
+
+--
+-- TOC entry 204 (class 1259 OID 1976407)
+-- Name: view_aluno_disciplina; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.view_aluno_disciplina AS
+ SELECT al.idaluno,
+    alu.nome,
+    al.iddisciplina,
+    d.nome AS disciplina,
+    al.ano,
+    al.semestre,
+    al.nota1,
+    al.nota2,
+    al.faltas
+   FROM ((public.aluno_disciplina al
+     JOIN public.aluno alu ON ((alu.idaluno = al.idaluno)))
+     JOIN public.disciplina d ON ((al.iddisciplina = d.iddisciplina)));
+
+
+ALTER TABLE public.view_aluno_disciplina OWNER TO postgres;
+
+--
+-- TOC entry 2067 (class 2604 OID 1976412)
+-- Name: aluno idaluno; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.aluno ALTER COLUMN idaluno SET DEFAULT nextval('public."aluno_idAluno_seq"'::regclass);
+
+
+--
+-- TOC entry 2068 (class 2604 OID 1976413)
+-- Name: disciplina iddisciplina; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.disciplina ALTER COLUMN iddisciplina SET DEFAULT nextval('public."disciplina_idDisciplina_seq"'::regclass);
+
+
+--
+-- TOC entry 2069 (class 2604 OID 1976414)
+-- Name: professor idprofessor; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.professor ALTER COLUMN idprofessor SET DEFAULT nextval('public."professor_idProfessor_seq"'::regclass);
+
+
+--
+-- TOC entry 2073 (class 2606 OID 1976416)
+-- Name: aluno_disciplina aluno_disciplina_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.aluno_disciplina
+    ADD CONSTRAINT aluno_disciplina_pkey PRIMARY KEY (idaluno, iddisciplina);
+
+
+--
+-- TOC entry 2071 (class 2606 OID 1976418)
+-- Name: aluno aluno_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.aluno
+    ADD CONSTRAINT aluno_pkey PRIMARY KEY (idaluno);
+
+
+--
+-- TOC entry 2075 (class 2606 OID 1976420)
+-- Name: disciplina codigo_disciplina; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.disciplina
+    ADD CONSTRAINT codigo_disciplina UNIQUE (codigo);
+
+
+--
+-- TOC entry 2077 (class 2606 OID 1976422)
+-- Name: disciplina disciplina_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.disciplina
+    ADD CONSTRAINT disciplina_pkey PRIMARY KEY (iddisciplina);
+
+
+--
+-- TOC entry 2081 (class 2606 OID 1976424)
+-- Name: professor_disciplina professor_disciplina_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.professor_disciplina
+    ADD CONSTRAINT professor_disciplina_pkey PRIMARY KEY (idprofessor, iddisciplina);
+
+
+--
+-- TOC entry 2079 (class 2606 OID 1976426)
+-- Name: professor professor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.professor
+    ADD CONSTRAINT professor_pkey PRIMARY KEY (idprofessor);
+
+
+--
+-- TOC entry 2082 (class 2606 OID 1976427)
+-- Name: aluno_disciplina fk_aluno; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.aluno_disciplina
+    ADD CONSTRAINT fk_aluno FOREIGN KEY (idaluno) REFERENCES public.aluno(idaluno);
+
+
+--
+-- TOC entry 2083 (class 2606 OID 1976432)
+-- Name: aluno_disciplina fk_disciplina; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.aluno_disciplina
+    ADD CONSTRAINT fk_disciplina FOREIGN KEY (iddisciplina) REFERENCES public.disciplina(iddisciplina);
+
+
+--
+-- TOC entry 2084 (class 2606 OID 1976437)
+-- Name: professor_disciplina fk_disciplina; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.professor_disciplina
+    ADD CONSTRAINT fk_disciplina FOREIGN KEY (iddisciplina) REFERENCES public.disciplina(iddisciplina);
+
+
+--
+-- TOC entry 2085 (class 2606 OID 1976442)
+-- Name: professor_disciplina fk_professor; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.professor_disciplina
+    ADD CONSTRAINT fk_professor FOREIGN KEY (idprofessor) REFERENCES public.professor(idprofessor);
+
+
+-- Completed on 2020-04-06 11:02:13
+
+--
+-- PostgreSQL database dump complete
+--
+
