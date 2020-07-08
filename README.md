@@ -1,4 +1,4 @@
-Sistema de controle academico
+# Sistema de controle academico
 
 o sistema tem como objetivo o gerenciamento acadêmico com consulta, cadastro, edição e exclusão de professores, alunos e disciplinas, vinculação de alunos e professores a uma ou várias disciplinas e geração de relatórios com as informações.
 
