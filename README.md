@@ -5,4 +5,3 @@ o sistema tem como objetivo o gerenciamento acadêmico com consulta, cadastro, e
 tecnologias utilizadas: linguagem de programação Java, banco de dados PostgreSQL, JasperReports para a geração dos relatórios.
 
 abaixo o sistema em execução:
-![](20200708_163719.mp4)
